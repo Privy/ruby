@@ -1,10 +1,9 @@
 # Ruby Style Guide
 
-This is Airbnb's Ruby Style Guide.
+This is Privy's Ruby Style Guide.
 
-It was inspired by [Github's guide](https://web.archive.org/web/20160410033955/https://github.com/styleguide/ruby) and [Bozhidar Batsov's guide][bbatsov-ruby].
-
-Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
+It is a fork of [Airbnb's guide](https://github.com/airbnb/ruby), which was
+inspired by [Github's guide](https://web.archive.org/web/20160410033955/https://github.com/styleguide/ruby) and [Bozhidar Batsov's guide][bbatsov-ruby].
 
 ## Table of Contents
   1. [Whitespace](#whitespace)
@@ -312,10 +311,16 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
 Portions of this section borrow heavily from the Google
 [C++][google-c++-comments] and [Python][google-python-comments] style guides.
 
+Use the [YARD](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md)
+documentation scheme where possible. See YARD's
+[Tags Overview](http://www.rubydoc.info/gems/yard/file/docs/Tags.md) for a list of
+available tags and directives.
+
 ### File/class-level comments
 
 Every class definition should have an accompanying comment that describes what
-it is for and how it should be used.
+it is for and how it should be used. Use the YARD directives `@!group` and
+`@!endgroup` to group related methods and attributes under a common name.
 
 A file that contains zero classes or more than one class should have a comment
 at the top describing its contents.
@@ -379,32 +384,13 @@ comment describes the function, it does not tell the function what to do. In
 general, these comments do not describe how the function performs its task.
 Instead, that should be left to comments interspersed in the function's code.
 
-Every function should mention what the inputs and outputs are, unless it meets
-all of the following criteria:
+Declare the inputs (including blocks) and output of every function using
+[YARD](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md) tags, unless
+the function meets all of the following criteria:
 
 * not externally visible
 * very short
 * obvious
-
-You may use whatever format you wish. In Ruby, two popular function
-documentation schemes are [TomDoc](http://tomdoc.org/) and
-[YARD](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md). You can also
-just write things out concisely:
-
-```ruby
-# Returns the fallback locales for the_locale.
-# If opts[:exclude_default] is set, the default locale, which is otherwise
-# always the last one in the returned list, will be excluded.
-#
-# For example:
-#   fallbacks_for(:"pt-BR")
-#     => [:"pt-BR", :pt, :en]
-#   fallbacks_for(:"pt-BR", :exclude_default => true)
-#     => [:"pt-BR", :pt]
-def fallbacks_for(the_locale, opts = {})
-  ...
-end
-```
 
 ### Block and inline comments
 
@@ -1600,6 +1586,6 @@ In either case:
 
 ## Translation
 
-  This style guide is also available in other languages:
+  Translations for the parent style guide, by Airbnb, are also available:
 
   - ![cn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **Chinese (Simplified)**: [1c7/ruby-airbnb](https://github.com/1c7/ruby-airbnb)
