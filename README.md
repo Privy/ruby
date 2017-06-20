@@ -210,7 +210,7 @@ inspired by [Github's guide](https://web.archive.org/web/20160410033955/https://
 
 ### Newlines
 
-* <a name="multiline-if-newline"></a>Add a new line after `if` conditions span
+* <a name="multiline-if-newline"></a>Add a new line after `if` conditions spanning
     multiple lines to help differentiate between the conditions and the body.
     <sup>[[link](#multiline-if-newline)]</sup>
 
@@ -500,7 +500,8 @@ Thus when you create a TODO, it is almost always your name that is given.
      end
      ```
 
-* <a name="no-default-args"></a>Do not use default arguments. Use an options
+* <a name="no-default-args"></a>Do not use default positional arguments. 
+    Use keyword arguments (if available - in Ruby 2.0 or later) or an options
     hash instead.<sup>[[link](#no-default-args)]</sup>
 
     ```ruby
@@ -510,13 +511,17 @@ Thus when you create a TODO, it is almost always your name that is given.
     end
 
     # good
+    def obliterate(things, gently: true, except: [], at: Time.now)
+      ...
+    end
+
+    # good
     def obliterate(things, options = {})
-      default_options = {
+      options = {
         :gently => true, # obliterate with soft-delete
         :except => [], # skip obliterating these things
         :at => Time.now, # don't obliterate them until later
-      }
-      options.reverse_merge!(default_options)
+      }.merge(options)
 
       ...
     end
@@ -715,6 +720,35 @@ In either case:
       end
     ```
 
+* <a name="unless-with-comparison-operator"></a>Avoid `unless` with comparison operators if you can use `if` with an opposing comparison operator.<sup>[[link](#unless-with-comparison-operator)]</sup>
+
+    ```ruby     
+      # bad
+      unless x == 10
+        ...
+      end
+      
+      # good
+      if x != 10
+        ...
+      end
+      
+      # bad
+      unless x < 10
+        ...
+      end
+      
+      # good
+      if x >= 10
+        ...
+      end
+      
+      # ok
+      unless x === 10
+        ...
+      end
+    ```
+
 * <a name="parens-around-conditions"></a>Don't use parentheses around the
     condition of an `if/unless/while`.
     <sup>[[link](#parens-around-conditions)]</sup>
@@ -783,6 +817,71 @@ In either case:
       something_else
     end
     ```
+
+### Nested conditionals
+
+* <a name="no-nested-conditionals"></a>
+  Avoid the use of nested conditionals for flow of control. 
+  ([More on this][avoid-else-return-early].) <sup>[[link](#no-nested-conditionals)]</sup>
+  
+  Prefer a guard clause when you can assert invalid data. A guard clause
+  is a conditional statement at the top of a function that returns as soon
+  as it can. 
+  
+  The general principles boil down to:
+  * Return immediately once you know your function cannot do anything more.
+  * Reduce nesting and indentation in the code by returning early. This makes
+  the code easier to read and requires less mental bookkeeping on the part
+  of the reader to keep track of `else` branches.
+  * The core or most important flows should be the least indented.
+
+  ```ruby
+  # bad
+  def compute
+    server = find_server
+    if server
+      client = server.client
+      if client
+        request = client.make_request
+        if request
+           process_request(request)
+        end
+      end
+    end
+  end
+
+  # good
+  def compute
+    server = find_server
+    return unless server
+    client = server.client
+    return unless client
+    request = client.make_request
+    return unless request
+    process_request(request)  
+  end
+  ```
+
+  Prefer `next` in loops instead of conditional blocks.
+
+  ```ruby
+  # bad
+  [0, 1, 2, 3].each do |item|
+    if item > 1
+      puts item
+    end
+  end
+
+  # good
+  [0, 1, 2, 3].each do |item|
+    next unless item > 1
+    puts item
+  end
+  ```
+
+  See also the section "Guard Clause", p68-70 in Beck, Kent.
+  *Implementation Patterns*. Upper Saddle River: Addison-Wesley, 2008, which
+  has inspired some of the content above.
 
 ## Syntax
 
@@ -1011,6 +1110,56 @@ In either case:
        an attribute when `self` is an ActiveRecord model: `self.guest = user`.
     3. Referencing the current instance's class: `self.class`.
 
+* <a name="freeze-constants"></a>When defining an object of any mutable
+    type meant to be a constant, make sure to call `freeze` on it. Common 
+    examples are strings, arrays, and hashes.
+    ([More on this][ruby-freeze].)<sup>[[link](#freeze-constants)]</sup>
+
+    The reason is that Ruby constants are actually mutable. Calling `freeze`
+    ensures they are not mutated and are therefore truly constant and 
+    attempting to modify them will raise an exception. For strings, this allows
+    older versions of Ruby below 2.2 to intern them.
+
+    ```ruby
+    # bad
+    class Color
+      RED = 'red'
+      BLUE = 'blue'
+      GREEN = 'green'
+      
+      ALL_COLORS = [
+        RED,
+        BLUE,
+        GREEN,
+      ]
+    
+      COLOR_TO_RGB = {
+        RED => 0xFF0000,
+        BLUE => 0x0000FF,
+        GREEN => 0x00FF00,
+      }
+    end
+
+    # good    
+    class Color
+      RED = 'red'.freeze
+      BLUE = 'blue'.freeze
+      GREEN = 'green'.freeze
+
+      ALL_COLORS = [
+        RED,
+        BLUE,
+        GREEN,
+      ].freeze
+    
+      COLOR_TO_RGB = {
+        RED => 0xFF0000,
+        BLUE => 0x0000FF,
+        GREEN => 0x00FF00,
+      }.freeze
+    end
+    ```
+
 ## Naming
 
 * <a name="snake-case"></a>Use `snake_case` for methods and variables.
@@ -1037,9 +1186,8 @@ In either case:
     <sup>[[link](#throwaway-variables)]</sup>
 
     ```ruby
-    payment, _ = Payment.complete_paypal_payment!(params[:token],
-                                                  native_currency,
-                                                  created_at)
+    version = '3.2.1'
+    major_version, minor_version, _ = version.split('.')
     ```
 
 ## Classes
@@ -1583,6 +1731,8 @@ In either case:
 [google-c++-comments]: https://google.github.io/styleguide/cppguide.html#Comments
 [google-python-comments]: https://google.github.io/styleguide/pyguide.html#Comments
 [ruby-naming-bang]: http://dablog.rubypal.com/2007/8/15/bang-methods-or-danger-will-rubyist
+[ruby-freeze]: http://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/
+[avoid-else-return-early]: http://blog.timoxley.com/post/47041269194/avoid-else-return-early
 
 ## Translation
 
