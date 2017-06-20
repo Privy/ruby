@@ -1,9 +1,14 @@
 # Ruby Style Guide
 
-This is Privy's Ruby Style Guide.
-
-It is a fork of [Airbnb's guide](https://github.com/airbnb/ruby), which was
+This is Privy's Ruby Style Guide. It is a fork of [Airbnb's guide](https://github.com/airbnb/ruby), which was
 inspired by [Github's guide](https://web.archive.org/web/20160410033955/https://github.com/styleguide/ruby) and [Bozhidar Batsov's guide][bbatsov-ruby].
+
+To merge in upstream changes from https://github.com/airbnb/ruby, run the following commands after cloning.
+```
+git remote add upstream git@github.com:airbnb/ruby.git
+git fetch upstream master
+git merge upstream/master
+```
 
 ## Table of Contents
   1. [Whitespace](#whitespace)
