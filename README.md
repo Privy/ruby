@@ -1,7 +1,6 @@
 # Ruby Style Guide
 
-This is Privy's Ruby Style Guide. It is a fork of [Airbnb's guide](https://github.com/airbnb/ruby), which was
-inspired by [Github's guide](https://web.archive.org/web/20160410033955/https://github.com/styleguide/ruby) and [Bozhidar Batsov's guide][bbatsov-ruby].
+This is Privy's Ruby Style Guide. It is a fork of [Airbnb's guide](https://github.com/airbnb/ruby), which was inspired by [GitHub's guide](https://web.archive.org/web/20160410033955/https://github.com/styleguide/ruby) and [Rubocop guide][rubocop-guide].
 
 To merge in upstream changes from https://github.com/airbnb/ruby, run the following commands after cloning.
 ```
@@ -10,25 +9,27 @@ git fetch upstream master
 git merge upstream/master
 ```
 
+Privy also has a [JavaScript Style Guide][privy-javascript].
+
 ## Table of Contents
   1. [Whitespace](#whitespace)
-    1. [Indentation](#indentation)
-    1. [Inline](#inline)
-    1. [Newlines](#newlines)
+      1. [Indentation](#indentation)
+      1. [Inline](#inline)
+      1. [Newlines](#newlines)
   1. [Line Length](#line-length)
   1. [Commenting](#commenting)
-    1. [File/class-level comments](#fileclass-level-comments)
-    1. [Function comments](#function-comments)
-    1. [Block and inline comments](#block-and-inline-comments)
-    1. [Punctuation, spelling, and grammar](#punctuation-spelling-and-grammar)
-    1. [TODO comments](#todo-comments)
-    1. [Commented-out code](#commented-out-code)
+      1. [File/class-level comments](#fileclass-level-comments)
+      1. [Function comments](#function-comments)
+      1. [Block and inline comments](#block-and-inline-comments)
+      1. [Punctuation, spelling, and grammar](#punctuation-spelling-and-grammar)
+      1. [TODO comments](#todo-comments)
+      1. [Commented-out code](#commented-out-code)
   1. [Methods](#methods)
-    1. [Method definitions](#method-definitions)
-    1. [Method calls](#method-calls)
+      1. [Method definitions](#method-definitions)
+      1. [Method calls](#method-calls)
   1. [Conditional Expressions](#conditional-expressions)
-    1. [Conditional keywords](#conditional-keywords)
-    1. [Ternary operator](#ternary-operator)
+      1. [Conditional keywords](#conditional-keywords)
+      1. [Ternary operator](#ternary-operator)
   1. [Syntax](#syntax)
   1. [Naming](#naming)
   1. [Classes](#classes)
@@ -38,7 +39,7 @@ git merge upstream/master
   1. [Regular Expressions](#regular-expressions)
   1. [Percent Literals](#percent-literals)
   1. [Rails](#rails)
-    1. [Scopes](#scopes)
+      1. [Scopes](#scopes)
   1. [Be Consistent](#be-consistent)
   1. [Translation](#translation)
 
@@ -46,8 +47,8 @@ git merge upstream/master
 
 ### Indentation
 
-* <a name="default-indentation"></a>Use soft-tabs with a two
-    space-indent.<sup>[[link](#default-indentation)]</sup>
+* <a name="default-indentation"></a>Use soft-tabs with a
+    two-space indent.<sup>[[link](#default-indentation)]</sup>
 
 * <a name="indent-when-as-case"></a>Indent `when` as deep as `case`.
     <sup>[[link](#indent-when-as-case)]</sup>
@@ -166,7 +167,7 @@ git merge upstream/master
 * <a name="spaces-block-params"></a>Do not include space inside block
     parameter pipes. Include one space between parameters in a block.
     Include one space outside block parameter pipes.
-    <sup>[[link](#spaces-block-params")]</sup>
+    <sup>[[link](#spaces-block-params)]</sup>
 
     ```ruby
     # bad
@@ -505,7 +506,7 @@ Thus when you create a TODO, it is almost always your name that is given.
      end
      ```
 
-* <a name="no-default-args"></a>Do not use default positional arguments. 
+* <a name="no-default-args"></a>Do not use default positional arguments.
     Use keyword arguments (if available - in Ruby 2.0 or later) or an options
     hash instead.<sup>[[link](#no-default-args)]</sup>
 
@@ -727,27 +728,27 @@ In either case:
 
 * <a name="unless-with-comparison-operator"></a>Avoid `unless` with comparison operators if you can use `if` with an opposing comparison operator.<sup>[[link](#unless-with-comparison-operator)]</sup>
 
-    ```ruby     
+    ```ruby
       # bad
       unless x == 10
         ...
       end
-      
+
       # good
       if x != 10
         ...
       end
-      
+
       # bad
       unless x < 10
         ...
       end
-      
+
       # good
       if x >= 10
         ...
       end
-      
+
       # ok
       unless x === 10
         ...
@@ -826,13 +827,13 @@ In either case:
 ### Nested conditionals
 
 * <a name="no-nested-conditionals"></a>
-  Avoid the use of nested conditionals for flow of control. 
+  Avoid the use of nested conditionals for flow of control.
   ([More on this][avoid-else-return-early].) <sup>[[link](#no-nested-conditionals)]</sup>
-  
+
   Prefer a guard clause when you can assert invalid data. A guard clause
   is a conditional statement at the top of a function that returns as soon
-  as it can. 
-  
+  as it can.
+
   The general principles boil down to:
   * Return immediately once you know your function cannot do anything more.
   * Reduce nesting and indentation in the code by returning early. This makes
@@ -863,7 +864,7 @@ In either case:
     return unless client
     request = client.make_request
     return unless request
-    process_request(request)  
+    process_request(request)
   end
   ```
 
@@ -1116,12 +1117,12 @@ In either case:
     3. Referencing the current instance's class: `self.class`.
 
 * <a name="freeze-constants"></a>When defining an object of any mutable
-    type meant to be a constant, make sure to call `freeze` on it. Common 
+    type meant to be a constant, make sure to call `freeze` on it. Common
     examples are strings, arrays, and hashes.
     ([More on this][ruby-freeze].)<sup>[[link](#freeze-constants)]</sup>
 
     The reason is that Ruby constants are actually mutable. Calling `freeze`
-    ensures they are not mutated and are therefore truly constant and 
+    ensures they are not mutated and are therefore truly constant and
     attempting to modify them will raise an exception. For strings, this allows
     older versions of Ruby below 2.2 to intern them.
 
@@ -1131,13 +1132,13 @@ In either case:
       RED = 'red'
       BLUE = 'blue'
       GREEN = 'green'
-      
+
       ALL_COLORS = [
         RED,
         BLUE,
         GREEN,
       ]
-    
+
       COLOR_TO_RGB = {
         RED => 0xFF0000,
         BLUE => 0x0000FF,
@@ -1145,7 +1146,7 @@ In either case:
       }
     end
 
-    # good    
+    # good
     class Color
       RED = 'red'.freeze
       BLUE = 'blue'.freeze
@@ -1156,7 +1157,7 @@ In either case:
         BLUE,
         GREEN,
       ].freeze
-    
+
       COLOR_TO_RGB = {
         RED => 0xFF0000,
         BLUE => 0x0000FF,
@@ -1535,11 +1536,11 @@ In either case:
 
     ```ruby
     # good and also fast
-    html = ''
-    html << '<h1>Page title</h1>'
+    story = ''
+    story << 'The Ugly Duckling'
 
     paragraphs.each do |paragraph|
-      html << "<p>#{paragraph}</p>"
+      story << paragraph
     end
     ```
 
@@ -1631,19 +1632,19 @@ In either case:
 
     ```ruby
     # bad - no interpolation needed
-    %(<div class="text">Some text</div>)
-    # should be '<div class="text">Some text</div>'
+    %(Welcome, Jane!)
+    # should be 'Welcome, Jane!'
 
     # bad - no double-quotes
     %(This is #{quality} style)
     # should be "This is #{quality} style"
 
     # bad - multiple lines
-    %(<div>\n<span class="big">#{exclamation}</span>\n</div>)
+    %(Welcome, Jane!\nPlease enjoy your stay at #{location}\nCheers!)
     # should be a heredoc.
 
     # good - requires interpolation, has quotes, single line
-    %(<tr><td class="name">#{name}</td>)
+    %(Welcome, #{name}!)
     ```
 
 * <a name="percent-r"></a>Use `%r` only for regular expressions matching *more
@@ -1730,13 +1731,13 @@ In either case:
 &mdash;[Google C++ Style Guide][google-c++]
 
 [airbnb-javascript]: https://github.com/airbnb/javascript
-[bbatsov-ruby]: https://github.com/bbatsov/ruby-style-guide
+[rubocop-guide]: https://github.com/rubocop-hq/ruby-style-guide
 [github-ruby]: https://github.com/styleguide/ruby
 [google-c++]: https://google.github.io/styleguide/cppguide.html
 [google-c++-comments]: https://google.github.io/styleguide/cppguide.html#Comments
 [google-python-comments]: https://google.github.io/styleguide/pyguide.html#Comments
 [ruby-naming-bang]: http://dablog.rubypal.com/2007/8/15/bang-methods-or-danger-will-rubyist
-[ruby-freeze]: http://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/
+[ruby-freeze]: https://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/
 [avoid-else-return-early]: http://blog.timoxley.com/post/47041269194/avoid-else-return-early
 
 ## Translation
