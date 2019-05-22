@@ -9,7 +9,7 @@ git fetch upstream master
 git merge upstream/master
 ```
 
-Privy also has a [JavaScript Style Guide][privy-javascript].
+Privy also has a [JavaScript Style Guide](https://github.com/Privy/javascript).
 
 ## Table of Contents
   1. [Whitespace](#whitespace)
